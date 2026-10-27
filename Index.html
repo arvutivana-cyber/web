@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Minu portfoolio</title>
+<style>
+:root {
+  --ink:#253440; --muted:#687680; --bg:#fff;
+  --soft:#f3f6f7; --line:#e1e7ea; --accent:#263c4a;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Arial,sans-serif;color:var(--ink);
+  line-height:1.6;background:var(--bg)}
+a{color:inherit}
+button,input,textarea,select{font:inherit}
+.wrap{width:min(1050px,92%);margin:auto}
+header{position:sticky;top:0;z-index:5;background:#fffffff2;
+  border-bottom:1px solid var(--line)}
+.nav{min-height:65px;display:flex;align-items:center;
+  justify-content:space-between;gap:12px}
+.brand{font-size:19px;font-weight:bold;text-decoration:none}
+nav{display:flex;gap:17px;flex-wrap:wrap}
+nav a{text-decoration:none;font-size:14px}
+button,.btn{border:0;border-radius:8px;padding:12px 16px;
+  background:var(--accent);color:white;cursor:pointer;
+  text-decoration:none;display:inline-block}
+button:active,.btn:active{opacity:.8}
+.editbar{background:#20333f;color:white;padding:12px 4%}
+.editbar-inner{display:flex;align-items:center;
+  justify-content:space-between;gap:10px;flex-wrap:wrap}
+.editbar button{background:white;color:#20333f}
+#editStatus{font-size:13px;color:#d8e4e9}
+.hero{background:var(--soft);padding:65px 0}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;
+  align-items:center;gap:35px}
+.eyebrow{font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);font-weight:bold}
+h1{font-size:clamp(38px,7vw,65px);letter-spacing:-2px;
+  line-height:1.08;margin:12px 0}
+h2{font-size:clamp(27px,4vw,36px);line-height:1.2}
+p{color:var(--muted)}
+.hero img{width:100%;height:340px;object-fit:cover;border-radius:15px}
+section{padding:58px 0}
+.section-intro{max-width:650px;margin-bottom:25px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:35px}
+.about-box{padding:25px;background:var(--soft);border-radius:13px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.card{border:1px solid var(--line);padding:21px;border-radius:12px;
+  display:flex;flex-direction:column;min-width:0}
+.card h3{margin:0 0 5px}
+.card p{font-size:14px}
+.price{font-size:26px;font-weight:bold;color:var(--ink);margin:10px 0}
+.gallery img{width:100%;height:230px;object-fit:cover;
+  border-radius:10px;background:var(--soft)}
+.gallery-item{position:relative}
+.gallery-item img{display:block}
+.change-image{display:none;margin-top:8px;width:100%}
+.editing .change-image{display:block}
+.editing [contenteditable="true"]{
+  outline:2px dashed #7c9aaa;outline-offset:3px;
+  border-radius:3px;cursor:text}
+.editing .gallery img{outline:2px dashed #7c9aaa}
+.contact-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:35px}
+form{display:grid;gap:13px}
+label{font-size:14px;font-weight:bold;display:block}
+input,textarea,select{width:100%;padding:12px;margin-top:5px;
+  border:1px solid var(--line);border-radius:8px;background:white;color:var(--ink)}
+textarea{min-height:110px;resize:vertical}
+.note{font-size:12px}
+footer{background:var(--accent);color:white;padding:28px 0}
+footer p{color:#d3dfe5;font-size:13px}
+.hidden{display:none!important}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+  background:#20333f;color:white;padding:12px 18px;border-radius:10px;
+  max-width:90%;z-index:20;box-shadow:0 4px 20px #0002}
+@media(max-width:700px){
+ .nav{padding:12px 0;align-items:flex-start;flex-direction:column}
+ nav{gap:12px}
+ .hero{padding:38px 0}
+ .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr}
+ .hero img{height:240px}
+ section{padding:40px 0}
+ .grid{grid-template-columns:1fr}
+ .gallery{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gallery img{height:170px}
+ .card{padding:17px}
+ .editbar-inner{align-items:flex-start}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#home" data-edit>Minu portfoolio</a>
+    <nav>
+      <a href="#about">Minust</a>
+      <a href="#prices">Hinnad</a>
+      <a href="#gallery">Galerii</a>
+      <a href="#contact">Kontakt</a>
+    </nav>
+  </div>
+</header>
+
+<div class="editbar">
+  <div class="editbar-inner">
+    <div>
+      <strong id="modeTitle">Vaatamise režiim</strong><br>
+      <span id="editStatus">Muuda sisu nupu abil.</span>
+    </div>
+    <div>
+      <button id="editBtn" type="button">✏️ Muuda sisu</button>
+      <button id="saveBtn" class="hidden" type="button">💾 Salvesta</button>
+      <button id="cancelBtn" class="hidden" type="button">Tühista</button>
+    </div>
+  </div>
+</div>
+
+<main>
+<section class="hero" id="home">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" data-edit>Tere tulemast</div>
+      <h1 data-edit>Marek Tamm</h1>
+      <h3 data-edit>Fotograaf · Disainer · Loov mõtleja</h3>
+      <p data-edit>Jäädvustan erilisi hetki ja loon puhta stiiliga
+      visuaale. Tutvu minu tööde ja teenustega.</p>
+      <a class="btn" href="#contact" data-edit>Võta ühendust →</a>
+    </div>
+    <img data-image="hero"
+      src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1000&q=80"
+      alt="Maaliline järv ja mäed">
+    <button class="change-image" data-change-image="hero" type="button">
+      Vaheta avalehe pilti
+    </button>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about-grid">
+    <div>
+      <div class="eyebrow">Minu lugu</div>
+      <h2 data-edit>Minust</h2>
+      <p data-edit>Olen loominguline inimene, kellele meeldivad
+      fotograafia, loodus ja disain. Minu eesmärk on pakkuda
+      kvaliteetset tulemust, mis vastab kliendi soovidele.</p>
+      <p data-edit>Tegutsen Tallinnas ja teen koostööd nii eraisikute
+      kui ka ettevõtetega.</p>
+    </div>
+    <div class="about-box">
+      <h3 data-edit>Mida ma teen?</h3>
+      <p data-edit>📷 Fotograafia — inimesed, loodus ja sündmused.</p>
+      <p data-edit>✏️ Disain — puhas ja kaasaegne visuaalne stiil.</p>
+      <p data-edit>⭐ Isiklik lähenemine igale projektile.</p>
+    </div>
+  </div>
+</section>
+
+<section id="prices" style="background:var(--soft)">
+  <div class="wrap">
+    <h2 data-edit>Hinnakiri</h2>
+    <p class="section-intro" data-edit>Vali sobiv teenus.
+      Täpne hind sõltub töö mahust ja sinu soovidest.</p>
+    <div class="grid">
+      <article class="card">
+        <h3 data-edit>Portreefotod</h3>
+        <p data-edit>Üks tund pildistamist ja fotode töötlus.</p>
+        <div class="price" data-edit>80 €</div>
+        <a class="btn" href="#contact" data-edit>Vali teenus</a>
+      </article>
+      <article class="card">
+        <h3 data-edit>Ürituse pildistamine</h3>
+        <p data-edit>Ürituse olulisemate hetkede jäädvustamine.</p>
+        <div class="price" data-edit>200 €</div>
+        <a class="btn" href="#contact" data-edit>Vali teenus</a>
+      </article>
+      <article class="card">
+        <h3 data-edit>Fototöötlus</h3>
+        <p data-edit>Ühe foto värvide ja valguse korrigeerimine.</p>
+        <div class="price" data-edit>15 €</div>
+        <a class="btn" href="#contact" data-edit>Vali teenus</a>
+      </article>
+    </div>
+    <p class="note" data-edit>Hinnad on näidishinnad. Muuda need enda teenustele vastavaks.</p>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <h2 data-edit>Galerii</h2>
+    <p class="section-intro" data-edit>Valik minu töödest.
+      Redigeerimisrežiimis saad pilte telefoni galeriist vahetada.</p>
+    <div class="grid gallery">
+      <div class="gallery-item">
+        <img data-image="g1" loading="lazy"
+          src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=700&q=80"
+          alt="Mägimaastik">
+        <button class="change-image" data-change-image="g1" type="button">Vaheta pilti</button>
+        <p data-edit>Mägimaastik</p>
+      </div>
+      <div class="gallery-item">
+        <img data-image="g2" loading="lazy"
+          src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=700&q=80"
+          alt="Lilled">
+        <button class="change-image" data-change-image="g2" type="button">Vaheta pilti</button>
+        <p data-edit>Looduse detailid</p>
+      </div>
+      <div class="gallery-item">
+        <img data-image="g3" loading="lazy"
+          src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80"
+          alt="Päikeseloojang">
+        <button class="change-image" data-change-image="g3" type="button">Vaheta pilti</button>
+        <p data-edit>Kuldne tund</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="background:var(--soft)">
+  <div class="wrap contact-grid">
+    <div>
+      <h2 data-edit>Võta ühendust</h2>
+      <p data-edit>Kirjuta mulle oma ideest või küsi pakkumist.
+        Vastan esimesel võimalusel.</p>
+      <p>E-post: <a href="mailto:marek@tamm.ee" data-edit>marek@tamm.ee</a></p>
+      <p data-edit>Asukoht: Tallinn, Eesti</p>
+    </div>
+    <form id="contactForm">
+      <label>Nimi
+        <input name="name" required placeholder="Sinu nimi">
+      </label>
+      <label>E-post
+        <input name="email" type="email" required placeholder="Sinu e-post">
+      </label>
+      <label>Teenus
+        <select name="service">
+          <option>Portreefotod</option>
+          <option>Ürituse pildistamine</option>
+          <option>Fototöötlus</option>
+          <option>Muu päring</option>
+        </select>
+      </label>
+      <label>Sõnum
+        <textarea name="message" required placeholder="Kirjuta oma soovist"></textarea>
+      </label>
+      <button type="submit">Saada päring</button>
+      <p class="note">Vorm avab sinu e-posti rakenduse. Muuda enne kasutamist e-posti aadress enda omaks.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <strong data-edit>Marek Tamm</strong>
+    <p>© <span id="year"></span> <span data-edit>Marek Tamm</span>.
+      Kõik õigused kaitstud.</p>
+  </div>
+</footer>
+
+<input id="imagePicker" class="hidden" type="file" accept="image/*">
+<div id="toast" class="hidden" role="status"></div>
+
+<script>
+(() => {
+  const STORE = "minu_portfoolio_v1";
+  const body = document.body;
+  const editBtn = document.getElementById("editBtn");
+  const saveBtn = document.getElementById("saveBtn");
+  const cancelBtn = document.getElementById("cancelBtn");
+  const status = document.getElementById("editStatus");
+  const modeTitle = document.getElementById("modeTitle");
+  const picker = document.getElementById("imagePicker");
+  const toastBox = document.getElementById("toast");
+  let editing = false;
+  let pendingImage = null;
+  let originalSnapshot = null;
+  let toastTimer;
+
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  function snapshot() {
+    const content = [...document.querySelectorAll("[data-edit]")].map(el => ({
+      html: el.innerHTML
+    }));
+    const images = {};
+    document.querySelectorAll("[data-image]").forEach(img => {
+      images[img.dataset.image] = img.getAttribute("src");
+    });
+    return {content, images};
+  }
+
+  function restore(data) {
+    if (!data) return;
+    const elements = [...document.querySelectorAll("[data-edit]")];
+    elements.forEach((el, i) => {
+      if (data.content && data.content[i]) el.innerHTML = data.content[i].html;
+    });
+    document.querySelectorAll("[data-image]").forEach(img => {
+      const src = data.images && data.images[img.dataset.image];
+      if (src) img.src = src;
+    });
+  }
+
+  function load() {
+    try {
+      const saved = localStorage.getItem(STORE);
+      if (saved) restore(JSON.parse(saved));
+    } catch (e) {
+      notify("Salvestatud andmeid ei saanud laadida.");
+    }
+  }
+
+  function notify(message) {
+    toastBox.textContent = message;
+    toastBox.classList.remove("hidden");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastBox.classList.add("hidden"), 3000);
+  }
+
+  function setEditing(value) {
+    editing = value;
+    body.classList.toggle("editing", editing);
+    document.querySelectorAll("[data-edit]").forEach(el => {
+      el.contentEditable = editing ? "true" : "false";
+      el.spellcheck = editing;
+    });
+    editBtn.classList.toggle("hidden", editing);
+    saveBtn.classList.toggle("hidden", !editing);
+    cancelBtn.classList.toggle("hidden", !editing);
+    modeTitle.textContent = editing ? "Redigeerimisrežiim" : "Vaatamise režiim";
+    status.textContent = editing
+      ? "Puuduta teksti ja muuda seda. Pildi vahetamiseks vajuta pildi nuppu."
+      : "Sinu salvestatud sisu kuvatakse siin.";
+  }
+
+  editBtn.addEventListener("click", () => {
+    originalSnapshot = snapshot();
+    setEditing(true);
+  });
+
+  saveBtn.addEventListener("click", () => {
+    try {
+      localStorage.setItem(STORE, JSON.stringify(snapshot()));
+      setEditing(false);
+      notify("Muudatused on sellesse brauserisse salvestatud.");
+    } catch (e) {
+      notify("Salvestusruum sai täis. Proovi väiksemat pilti.");
+    }
+  });
+
+  cancelBtn.addEventListener("click", () => {
+    restore(originalSnapshot);
+    setEditing(false);
+    notify("Salvestamata muudatused tühistati.");
+  });
+
+  document.querySelectorAll("[data-change-image]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      if (!editing) return;
+      pendingImage = btn.dataset.changeImage;
+      picker.value = "";
+      picker.click();
+    });
+  });
+
+  picker.addEventListener("change", () => {
+    const file = picker.files && picker.files[0];
+    if (!file || !pendingImage) return;
+    if (!file.type.startsWith("image/")) {
+      notify("Palun vali pildifail.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const maxSide = 1000;
+        const scale = Math.min(1, maxSide / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        const compressed = canvas.toDataURL("image/jpeg", 0.78);
+        const target = document.querySelector('[data-image="' + pendingImage + '"]');
+        if (target) {
+          target.src = compressed;
+          target.dataset.localImage = "true";
+          notify("Pilt vahetatud. Vajuta Salvesta, et muudatus säiliks.");
+        }
+        pendingImage = null;
+      };
+      image.onerror = () => notify("Seda pilti ei saanud avada.");
+      image.src = reader.result;
+    };
+    reader.onerror = () => notify("Pildi lugemine ebaõnnestus.");
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("contactForm").addEventListener("submit", e => {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    const emailLink = document.querySelector('a[data-edit][href^="mailto:"]');
+    const recipient = emailLink
+      ? emailLink.getAttribute("href").replace("mailto:", "").trim()
+      : "";
+    if (!recipient || recipient === "marek@tamm.ee") {
+      notify("Muuda enne kasutamist kontaktide juures e-posti aadress enda omaks.");
+      return;
+    }
+    const subject = encodeURIComponent("Veebilehe päring");
+    const message = encodeURIComponent(
+      "Nimi: " + form.get("name") + "\n" +
+      "E-post: " + form.get("email") + "\n" +
+      "Teenus: " + form.get("service") + "\n\n" +
+      form.get("message")
+    );
+    location.href = "mailto:" + recipient + "?subject=" + subject + "&body=" + message;
+  });
+
+  load();
+  setEditing(false);
+})();
+</script>
+</body>
+</html>
